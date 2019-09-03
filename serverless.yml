@@ -1,0 +1,145 @@
+service: thexperimentlab
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-pseudo-parameters
+  - serverless-python-requirements
+custom:
+  stage: dev
+  name: thexperimentlab
+  tableThroughput: 1
+
+provider:
+  name: aws
+  runtime: python3.6
+  region: eu-west-1
+  environment:
+    
+    username: 
+    password: 
+
+functions:
+  instaBot:
+    name: instaBot--${self:custom.name}
+    handler: instaBot.instaBot
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource:
+          - "*"
+    events:
+          - schedule: rate(30 minutes)
+
+  following:
+    name: following--${self:custom.name}
+    handler: following.following
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource:
+          - "*"
+    events:
+          - schedule: rate(5 minutes)
+
+  comment:
+    name: comment--${self:custom.name}
+    handler: comment.comment
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource:
+          - "*"
+    events:
+          - schedule: rate(5 minutes)
+
+  like:
+    name: like--${self:custom.name}
+    handler: like.like
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource:
+          - "*"
+    events:
+          - schedule: rate(5 minutes)
+
+
+resources:
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: instaTable--${self:custom.name}
+        AttributeDefinitions:
+          - AttributeName: username
+            AttributeType: S
+          - AttributeName: pk
+            AttributeType: N
+        KeySchema:
+          - AttributeName: username
+            KeyType: HASH
+          - AttributeName: pk
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: ${self:custom.tableThroughput}
+          WriteCapacityUnits: ${self:custom.tableThroughput}
+
+    scannedTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: scannedTable--${self:custom.name}
+        AttributeDefinitions:
+          - AttributeName: username
+            AttributeType: S
+          - AttributeName: pk
+            AttributeType: N
+        KeySchema:
+          - AttributeName: username
+            KeyType: HASH
+          - AttributeName: pk
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: ${self:custom.tableThroughput}
+          WriteCapacityUnits: ${self:custom.tableThroughput}
+
+    accountTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: accountTable--${self:custom.name}
+        AttributeDefinitions:
+          - AttributeName: date
+            AttributeType: S
+          - AttributeName: username
+            AttributeType: S
+        KeySchema:
+          - AttributeName: date
+            KeyType: HASH
+          - AttributeName: username
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: ${self:custom.tableThroughput}
+          WriteCapacityUnits: ${self:custom.tableThroughput}
