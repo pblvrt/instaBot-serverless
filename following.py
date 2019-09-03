@@ -43,7 +43,7 @@ def following(event, context):
     if account['Item']['followed'] >= 100:
         return
     else:
-        api = InstagramAPI("npmScripts", "npmScripts8611")
+        api = InstagramAPI(username, password)
         api.login()
         print(api.follow(int(random.choice(RandomItem['Items'])['pk'])))
         print("FOLLOWINGS=================")
