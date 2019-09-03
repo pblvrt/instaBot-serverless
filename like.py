@@ -8,9 +8,9 @@ accountTable = dynamoClient.Table('accountTable')
 instaTable = dynamoClient.Table('instaTable')
 
 def like(event, context):
-    username = 'npmScripts'
-    password = 'npmScripts8611'
-
+    username = os.environ['username']
+    password = os.environ['password']
+    
     RandomItem = instaTable.scan(
         ProjectionExpression = "pk"
     )

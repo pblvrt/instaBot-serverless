@@ -10,7 +10,10 @@ table2 = dynamoClient.Table('scannedTable')
 
 def instaBot(event, context):
 
-    api = InstagramAPI("npmScripts", "npmScripts8611")
+    username = os.environ['username']
+    password = os.environ['password']
+
+    api = InstagramAPI(username, password)
     api.login()
 
     hastags = ["coding", "programador", "robots", "ordenadores", "coder" ]
