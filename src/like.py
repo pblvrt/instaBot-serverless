@@ -4,14 +4,15 @@ import time, random, os, sys, datetime
 import boto3
 
 dynamoClient = boto3.resource('dynamodb')
-accountTable = dynamoClient.Table('accountTable')
-instaTable = dynamoClient.Table('instaTable')
+accountTable = dynamoClient.Table(os.environ['accountTable'])
+scannedTable = dynamoClient.Table(os.environ['scannedTable'])
+usersTable = dynamoClient.Table(os.environ['usersTable'])
 
 def like(event, context):
     username = os.environ['username']
     password = os.environ['password']
     
-    RandomItem = instaTable.scan(
+    RandomItem = usersTable.scan(
         ProjectionExpression = "pk"
     )
     print(random.choice(RandomItem['Items'])['pk'])

@@ -5,8 +5,9 @@ import boto3
 from boto3.dynamodb.conditions import  Key
 
 dynamoClient = boto3.resource('dynamodb')
-table = dynamoClient.Table('instaTable')
-scannedTable = dynamoClient.Table('scannedTable')
+accountTable = dynamoClient.Table(os.environ['accountTable'])
+scannedTable = dynamoClient.Table(os.environ['scannedTable'])
+usersTable = dynamoClient.Table(os.environ['usersTable'])
 
 def instaBot(event, context):
 
@@ -32,7 +33,7 @@ def instaBot(event, context):
             for follower in api.LastJson['users']:
                 print(follower)
                 try:
-                    table.put_item(Item=follower)
+                    usersTable.put_item(Item=follower)
                 except:
                     pass
             return

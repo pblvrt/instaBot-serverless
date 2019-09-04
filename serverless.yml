@@ -8,18 +8,28 @@ custom:
   stage: dev
   name: thexperimentlab
   tableThroughput: 1
+  scannedTable: scannedTable--${self:custom.name}
+  accountTable: accountTable--${self:custom.name}
+  usersTable: usersTable--${self:custom.name}
 
 provider:
   name: aws
   runtime: python3.6
   region: eu-west-1
+  #Configure the bot by editing the env variables below
   environment:
     username: npmScripts 
     password: npmScripts8611
     rateLimitsFollow: 100
+    rateLimitsComment: 50
+    rateLimitsLike: 50
     unfollowAll: 'False'
     hashtags: coding|programador|robots|computer|hacking
     
+    scannedTable: scannedTable--${self:custom.name}
+    accountTable: accountTable--${self:custom.name}
+    usersTable: usersTable--${self:custom.name}
+
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -30,7 +40,9 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - "*"
+        - arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/${self:custom.scannedTable}
+        - arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/${self:custom.accountTable}
+        - arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/${self:custom.usersTable}
 
 functions:
   instaBot:
@@ -78,7 +90,7 @@ resources:
     usersTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: instaTable--${self:custom.name}
+        TableName: ${self:custom.usersTable}
         AttributeDefinitions:
           - AttributeName: username
             AttributeType: S
@@ -96,7 +108,7 @@ resources:
     scannedTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: scannedTable--${self:custom.name}
+        TableName: ${self:custom.scannedTable}
         AttributeDefinitions:
           - AttributeName: username
             AttributeType: S
@@ -114,7 +126,7 @@ resources:
     accountTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: accountTable--${self:custom.name}
+        TableName: ${self:custom.accountTable}
         AttributeDefinitions:
           - AttributeName: date
             AttributeType: S
