@@ -14,8 +14,8 @@ provider:
   runtime: python3.6
   region: eu-west-1
   environment:
-    username: npmScripts 
-    password: npmScripts8611
+    username: 
+    password:
     rateLimitsFollow: 100
     unfollowAll: 'False'
     hashtags: coding|programador|robots|computer|hacking
