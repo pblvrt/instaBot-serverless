@@ -57,7 +57,7 @@ def unfollow(event, context):
                 'date': str(datetime.datetime.now().date()), 'username': username
             },
             AttributeUpdates={
-                'followed': {
+                'unfollowed': {
                     'Value': 1,
                     'Action': 'ADD'
                 }
