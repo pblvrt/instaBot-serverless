@@ -17,7 +17,7 @@ def instaBot(event, context):
 
     api = InstagramAPI(username, password)
     api.login()
-    api.searchUsers(random.choice(hashtags))  # get self user feed
+    api.searchUsers(random.choice(hashtags))  
 
     for user in api.LastJson['users']:
         response = scannedTable.get_item(

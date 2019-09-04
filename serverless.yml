@@ -1,4 +1,4 @@
-service: thexperimentlab
+service: 
 
 plugins:
   - serverless-iam-roles-per-function
@@ -6,7 +6,7 @@ plugins:
   - serverless-python-requirements
 custom:
   stage: dev
-  name: thexperimentlab
+  name: 
   tableThroughput: 1
   scannedTable: scannedTable--${self:custom.name}
   accountTable: accountTable--${self:custom.name}
@@ -19,12 +19,12 @@ provider:
   #Configure the bot by editing the env variables below
   environment:
     username: 
-    password:
-    rateLimitsFollow: 100
-    rateLimitsComment: 50
-    rateLimitsLike: 50
+    password: 
+    rateLimitsFollow: 200
+    rateLimitsComment: 200
+    rateLimitsLike: 200
     unfollowAll: 'False'
-    hashtags: coding|programador|robots|computer|hacking
+    hashtags: comdia|viajes|mujeres|sexo|chicas|modelo
     
     scannedTable: scannedTable--${self:custom.name}
     accountTable: accountTable--${self:custom.name}
@@ -49,7 +49,7 @@ functions:
     name: instaBot--${self:custom.name}
     handler: src/instaBot.instaBot
     events:
-          - schedule: rate(30 minutes)
+          - schedule: rate(15 minutes)
     timeout: 900 
     reservedConcurrency: 1
 
@@ -57,7 +57,7 @@ functions:
     name: follow--${self:custom.name}
     handler: src/follow.follow
     events:
-          - schedule: rate(5 minutes)
+          - schedule: rate(1 minute)
     timeout: 10 
     reservedConcurrency: 1
 
@@ -65,15 +65,15 @@ functions:
     name: unfollow--${self:custom.name}
     handler: src/unfollow.unfollow
     events:
-          - schedule: rate(5 minutes)
+          - schedule: rate(1 minute)
     timeout: 10 
-    reservedConcurrency: 1
+    reservedConcurrency: 0
 
   comment:
     name: comment--${self:custom.name}
     handler: src/comment.comment
     events:
-          - schedule: rate(5 minutes)
+          - schedule: rate(1 minute)
     timeout: 10 
     reservedConcurrency: 1
 
@@ -81,7 +81,15 @@ functions:
     name: like--${self:custom.name}
     handler: src/like.like
     events:
-          - schedule: rate(5 minutes)
+          - schedule: rate(1 minute)
+    timeout: 10 
+    reservedConcurrency: 1
+
+  repost:
+    name: repost--${self:custom.name}
+    handler: src/repost.repost
+    events:
+          - schedule: rate(8 hours)
     timeout: 10 
     reservedConcurrency: 1
 
