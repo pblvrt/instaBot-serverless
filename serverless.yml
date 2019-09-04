@@ -14,12 +14,12 @@ provider:
   runtime: python3.6
   region: eu-west-1
   environment:
-    username:  
-    password: 
+    username: npmScripts 
+    password: npmScripts8611
     rateLimitsFollow: 100
     unfollowAll: 'False'
     hashtags: coding|programador|robots|computer|hacking
-
+    
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -38,31 +38,40 @@ functions:
     handler: src/instaBot.instaBot
     events:
           - schedule: rate(30 minutes)
+    timeout: 900 
+    reservedConcurrency: 1
 
   follow:
     name: follow--${self:custom.name}
     handler: src/follow.follow
     events:
           - schedule: rate(5 minutes)
+    timeout: 10 
+    reservedConcurrency: 1
 
   unfollow:
     name: unfollow--${self:custom.name}
     handler: src/unfollow.unfollow
     events:
           - schedule: rate(5 minutes)
+    timeout: 10 
+    reservedConcurrency: 1
 
   comment:
     name: comment--${self:custom.name}
     handler: src/comment.comment
     events:
           - schedule: rate(5 minutes)
+    timeout: 10 
+    reservedConcurrency: 1
 
   like:
     name: like--${self:custom.name}
     handler: src/like.like
     events:
           - schedule: rate(5 minutes)
-
+    timeout: 10 
+    reservedConcurrency: 1
 
 resources:
   Resources:
