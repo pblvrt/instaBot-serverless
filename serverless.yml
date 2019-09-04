@@ -14,76 +14,52 @@ provider:
   runtime: python3.6
   region: eu-west-1
   environment:
-    
-    username: 
+    username:  
     password: 
+    rateLimitsFollow: 100
+    unfollowAll: 'False'
+    hashtags: coding|programador|robots|computer|hacking
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - "*"
 
 functions:
   instaBot:
     name: instaBot--${self:custom.name}
-    handler: instaBot.instaBot
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:Query
-          - dynamodb:Scan
-          - dynamodb:GetItem
-          - dynamodb:PutItem
-          - dynamodb:UpdateItem
-          - dynamodb:DeleteItem
-        Resource:
-          - "*"
+    handler: src/instaBot.instaBot
     events:
           - schedule: rate(30 minutes)
 
-  following:
-    name: following--${self:custom.name}
-    handler: following.following
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:Query
-          - dynamodb:Scan
-          - dynamodb:GetItem
-          - dynamodb:PutItem
-          - dynamodb:UpdateItem
-          - dynamodb:DeleteItem
-        Resource:
-          - "*"
+  follow:
+    name: follow--${self:custom.name}
+    handler: src/follow.follow
+    events:
+          - schedule: rate(5 minutes)
+
+  unfollow:
+    name: unfollow--${self:custom.name}
+    handler: src/unfollow.unfollow
     events:
           - schedule: rate(5 minutes)
 
   comment:
     name: comment--${self:custom.name}
-    handler: comment.comment
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:Query
-          - dynamodb:Scan
-          - dynamodb:GetItem
-          - dynamodb:PutItem
-          - dynamodb:UpdateItem
-          - dynamodb:DeleteItem
-        Resource:
-          - "*"
+    handler: src/comment.comment
     events:
           - schedule: rate(5 minutes)
 
   like:
     name: like--${self:custom.name}
-    handler: like.like
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:Query
-          - dynamodb:Scan
-          - dynamodb:GetItem
-          - dynamodb:PutItem
-          - dynamodb:UpdateItem
-          - dynamodb:DeleteItem
-        Resource:
-          - "*"
+    handler: src/like.like
     events:
           - schedule: rate(5 minutes)
 

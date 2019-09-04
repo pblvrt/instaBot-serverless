@@ -41,8 +41,8 @@ from .exceptions import SentryBlockException
 
 class InstagramAPI:
     API_URL = 'https://i.instagram.com/api/v1/'
-    DEVICE_SETTINTS = {'manufacturer': 'Samsung',
-                       'model': 'Galaxy',
+    DEVICE_SETTINTS = {'manufacturer': 'Google',
+                       'model': 'Pixel',
                        'android_version': 18,
                        'android_release': '4.3'}
     USER_AGENT = 'Instagram 10.26.0 Android ({android_version}/{android_release}; 320dpi; 720x1280; {manufacturer}; {model}; armani; qcom; en_US)'.format(**DEVICE_SETTINTS)

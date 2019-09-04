@@ -7,7 +7,7 @@ dynamoClient = boto3.resource('dynamodb')
 accountTable = dynamoClient.Table('accountTable')
 instaTable = dynamoClient.Table('instaTable')
 
-def following(event, context):
+def follow(event, context):
     username = os.environ['username']
     password = os.environ['password']
 
@@ -35,12 +35,12 @@ def following(event, context):
             'comments': 0,
             'unfollowed': 0,
             'likes': 0,
-            'blocked': False
+            'blocked': 'False'
         }
         accountTable.put_item(Item=Item)
         return
     
-    if account['Item']['followed'] >= 100:
+    if account['Item']['followed'] >= int(os.environ['rateLimitsFollow']):
         return
     else:
         api = InstagramAPI(username, password)

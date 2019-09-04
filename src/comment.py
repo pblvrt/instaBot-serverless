@@ -40,7 +40,7 @@ def comment(event, context):
         accountTable.put_item(Item=Item)
         return
     
-    if account['Item']['comments'] >= 50:
+    if account['Item']['comments'] >= int(os.environ['rateLimitsComment']):
         return
     else:
         api = InstagramAPI(username, password)

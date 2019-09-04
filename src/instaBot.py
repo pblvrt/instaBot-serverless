@@ -1,41 +1,33 @@
 import json
-from InstagramAPI import InstagramAPI
+from Instagram import InstagramAPI
 import time, random, os, sys
 import boto3
 from boto3.dynamodb.conditions import  Key
 
 dynamoClient = boto3.resource('dynamodb')
 table = dynamoClient.Table('instaTable')
-table2 = dynamoClient.Table('scannedTable')
+scannedTable = dynamoClient.Table('scannedTable')
 
 def instaBot(event, context):
 
     username = os.environ['username']
     password = os.environ['password']
+    hashtags = os.environ['hashtags'].split('|')
 
     api = InstagramAPI(username, password)
     api.login()
-
-    hastags = ["coding", "programador", "robots", "ordenadores", "coder" ]
-
-    api.searchUsers(random.choice(hastags))  # get self user feed
-
-    time.sleep(random.randint(1, 10))
+    api.searchUsers(random.choice(hashtags))  # get self user feed
 
     for user in api.LastJson['users']:
-        print(user)
-
-        response = table2.get_item(
+        response = scannedTable.get_item(
             Key={
                 'username': user['username'], 'pk': user['pk']
             }
         )
-        print(response)
-        
         try:
             print(response['Item'])
         except KeyError:
-            table2.put_item(Item=user)
+            scannedTable.put_item(Item=user)
             api.getUserFollowers(user['pk'], maxid = '')
             for follower in api.LastJson['users']:
                 print(follower)

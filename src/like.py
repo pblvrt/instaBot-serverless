@@ -40,7 +40,7 @@ def like(event, context):
         accountTable.put_item(Item=Item)
         return
     
-    if account['Item']['comments'] >= 50:
+    if account['Item']['comments'] >= int(os.environ['rateLimitsLike']):
         return
     else:
         api = InstagramAPI(username, password)
