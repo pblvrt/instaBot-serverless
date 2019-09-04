@@ -18,8 +18,8 @@ provider:
   region: eu-west-1
   #Configure the bot by editing the env variables below
   environment:
-    username: npmScripts 
-    password: npmScripts8611
+    username: 
+    password:
     rateLimitsFollow: 100
     rateLimitsComment: 50
     rateLimitsLike: 50
