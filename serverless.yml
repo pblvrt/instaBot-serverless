@@ -1,4 +1,4 @@
-service: cocoabw
+service: 
 
 plugins:
   - serverless-iam-roles-per-function
@@ -6,7 +6,7 @@ plugins:
   - serverless-python-requirements
 custom:
   stage: dev
-  name: cocoabw
+  name: 
   tableThroughput: 1
   scannedTable: scannedTable--${self:custom.name}
   accountTable: accountTable--${self:custom.name}
@@ -20,12 +20,12 @@ provider:
   environment:
     username: 
     password: 
-    rateLimitsFollow: 1000
-    rateLimitsComment: 200
-    rateLimitsLike: 200
+    rateLimitsFollow: 100
+    rateLimitsComment: 35
+    rateLimitsLike: 35
     unfollowAll: 'False'
-    hashtags: blackandwhite|blackandwhitephotography|blackandwhitephoto|bw_shots
-    users: bnwmood|ts_design_bw|bw_addiction|moods_in_bnw|black_and_white__life
+    hashtags: 
+    users: 
 
     scannedTable: scannedTable--${self:custom.name}
     accountTable: accountTable--${self:custom.name}
@@ -53,6 +53,7 @@ functions:
           - schedule: rate(15 minutes)
     timeout: 900 
     reservedConcurrency: 1
+    memorySize: 128
 
   users:
     name: users--${self:custom.name}
@@ -61,6 +62,7 @@ functions:
           - schedule: rate(15 minutes)
     timeout: 900 
     reservedConcurrency: 1
+    memorySize: 128
 
   follow:
     name: follow--${self:custom.name}
@@ -69,7 +71,8 @@ functions:
           - schedule: rate(5 minutes)
     timeout: 10 
     reservedConcurrency: 1
-
+    memorySize: 128
+    
   unfollow:
     name: unfollow--${self:custom.name}
     handler: src/unfollow.unfollow
@@ -77,6 +80,7 @@ functions:
           - schedule: rate(2 minutes)
     timeout: 10 
     reservedConcurrency: 0
+    memorySize: 128
 
   comment:
     name: comment--${self:custom.name}
@@ -85,6 +89,7 @@ functions:
           - schedule: rate(5 minutes)
     timeout: 10 
     reservedConcurrency: 1
+    memorySize: 128
 
   like:
     name: like--${self:custom.name}
@@ -93,6 +98,7 @@ functions:
           - schedule: rate(5 minutes)
     timeout: 10 
     reservedConcurrency: 1
+    memorySize: 128
 
   repost:
     name: repost--${self:custom.name}
@@ -101,6 +107,7 @@ functions:
           - schedule: rate(8 hours)
     timeout: 10 
     reservedConcurrency: 1
+    memorySize: 128
 
 resources:
   Resources:

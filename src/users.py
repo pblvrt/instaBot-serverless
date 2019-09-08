@@ -24,25 +24,23 @@ def users(event, context):
     # search users
     api.searchUsers(randomHash)  
 
-    for user in api.LastJson['users']:
+    for user in api.LastJson['hashtags']:
         response = scannedTable.get_item(
             Key={
                 'username': user['username'], 'pk': user['pk']
             }
         )
         try:
-            print(response['Item'])
         except KeyError:
             scannedTable.put_item(Item=user)
             next_max_id = True
             while next_max_id:
-                print('test')
+                
                 # first iteration hack
                 if next_max_id is True:
                     next_max_id = ''
                     _ = api.getUserFollowers(user['pk'], maxid=next_max_id)
                 for follower in api.LastJson['users']:
-                    print(follower)
                     try:
                         Item = {
                             'pk': liker['pk'],
