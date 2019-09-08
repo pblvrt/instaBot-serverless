@@ -1,4 +1,4 @@
-service: 
+service: cocoabw
 
 plugins:
   - serverless-iam-roles-per-function
@@ -6,7 +6,7 @@ plugins:
   - serverless-python-requirements
 custom:
   stage: dev
-  name: 
+  name: cocoabw
   tableThroughput: 1
   scannedTable: scannedTable--${self:custom.name}
   accountTable: accountTable--${self:custom.name}
@@ -20,12 +20,13 @@ provider:
   environment:
     username: 
     password: 
-    rateLimitsFollow: 200
+    rateLimitsFollow: 1000
     rateLimitsComment: 200
     rateLimitsLike: 200
     unfollowAll: 'False'
-    hashtags: comdia|viajes|mujeres|sexo|chicas|modelo
-    
+    hashtags: blackandwhite|blackandwhitephotography|blackandwhitephoto|bw_shots
+    users: bnwmood|ts_design_bw|bw_addiction|moods_in_bnw|black_and_white__life
+
     scannedTable: scannedTable--${self:custom.name}
     accountTable: accountTable--${self:custom.name}
     usersTable: usersTable--${self:custom.name}
@@ -45,9 +46,17 @@ provider:
         - arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/${self:custom.usersTable}
 
 functions:
-  instaBot:
-    name: instaBot--${self:custom.name}
-    handler: src/instaBot.instaBot
+  tags:
+    name: tags--${self:custom.name}
+    handler: src/tags.tags
+    events:
+          - schedule: rate(15 minutes)
+    timeout: 900 
+    reservedConcurrency: 1
+
+  users:
+    name: users--${self:custom.name}
+    handler: src/users.users
     events:
           - schedule: rate(15 minutes)
     timeout: 900 
@@ -57,7 +66,7 @@ functions:
     name: follow--${self:custom.name}
     handler: src/follow.follow
     events:
-          - schedule: rate(1 minute)
+          - schedule: rate(5 minutes)
     timeout: 10 
     reservedConcurrency: 1
 
@@ -65,7 +74,7 @@ functions:
     name: unfollow--${self:custom.name}
     handler: src/unfollow.unfollow
     events:
-          - schedule: rate(1 minute)
+          - schedule: rate(2 minutes)
     timeout: 10 
     reservedConcurrency: 0
 
@@ -73,7 +82,7 @@ functions:
     name: comment--${self:custom.name}
     handler: src/comment.comment
     events:
-          - schedule: rate(1 minute)
+          - schedule: rate(5 minutes)
     timeout: 10 
     reservedConcurrency: 1
 
@@ -81,7 +90,7 @@ functions:
     name: like--${self:custom.name}
     handler: src/like.like
     events:
-          - schedule: rate(1 minute)
+          - schedule: rate(5 minutes)
     timeout: 10 
     reservedConcurrency: 1
 

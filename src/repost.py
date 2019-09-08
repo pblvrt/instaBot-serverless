@@ -30,7 +30,10 @@ def repost(event, context):
     }
 
     response = requests.get(request_url, headers=headers)
+    print(json.dumps(response.json(), indent=4))
+    
     node = random.choice(response.json()['graphql']['user']['edge_owner_to_timeline_media']['edges'])
+
     caption = node['node']['edge_media_to_caption']['edges'][0]['node']['text']
     fileUrl = node['node']['display_url']
 

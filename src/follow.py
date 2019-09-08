@@ -2,6 +2,7 @@ import json
 from Instagram import InstagramAPI
 import time, random, os, sys, datetime
 import boto3
+from boto3.dynamodb.conditions import Key
 
 dynamoClient = boto3.resource('dynamodb')
 accountTable = dynamoClient.Table(os.environ['accountTable'])
@@ -13,12 +14,14 @@ def follow(event, context):
     password = os.environ['password']
 
     RandomItem = usersTable.scan(
-        ProjectionExpression = "pk"
+        ProjectionExpression = "username"
     )
-    print(random.choice(RandomItem['Items'])['pk'])
+    randomUser = random.choice(RandomItem['Items'])['username']
 
-    print(datetime.datetime.now().date())
-
+    response = usersTable.query(
+        KeyConditionExpression=Key('username').eq(randomUser)
+    )
+    print(response['Items'][0]['pk'])
     account = accountTable.get_item(
         Key={
         'date': str(datetime.datetime.now().date()), 'username': username
@@ -44,16 +47,18 @@ def follow(event, context):
     if account['Item']['followed'] >= int(os.environ['rateLimitsFollow']):
         return
     else:
+        print('test')
         api = InstagramAPI(username, password)
         api.login()
-        print(api.follow(int(random.choice(RandomItem['Items'])['pk'])))
+        print(api.follow(int(response['Items'][0]['pk'])))
+        print(api.LastJson)
         print("FOLLOWINGS=================")
         api.getSelfUsersFollowing()
         print(len(api.LastJson['users']))
         print("FOLLOWERS=================")
         api.getSelfUserFollowers()
         print(len(api.LastJson['users']))
-        response = accountTable.update_item(
+        reply = accountTable.update_item(
             Key={
                 'date': str(datetime.datetime.now().date()), 'username': username
             },
@@ -61,6 +66,21 @@ def follow(event, context):
                 'followed': {
                     'Value': 1,
                     'Action': 'ADD'
+                }
+            }
+        )
+        response = usersTable.update_item(
+            Key={
+                'username': randomUser, 'pk': response['Items'][0]['pk']
+            },
+            AttributeUpdates={
+                'followed': {
+                    'Value': True,
+                    'Action': 'PUT'
+                },
+                'followed_date': {
+                    'Value': str(datetime.datetime.now().date()),
+                    'Action': 'PUT'
                 }
             }
         )

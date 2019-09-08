@@ -16,7 +16,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
-
+test.py
 node_modules
 
 # Serverless directories
