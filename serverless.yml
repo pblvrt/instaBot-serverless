@@ -5,8 +5,8 @@ plugins:
   - serverless-pseudo-parameters
   - serverless-python-requirements
 custom:
-  stage: dev
-  name: 
+  stage: v1
+  name:  
   tableThroughput: 1
   scannedTable: scannedTable--${self:custom.name}
   accountTable: accountTable--${self:custom.name}
@@ -20,9 +20,9 @@ provider:
   environment:
     username: 
     password: 
-    rateLimitsFollow: 100
-    rateLimitsComment: 35
-    rateLimitsLike: 35
+    rateLimitsFollow: 1000
+    rateLimitsComment: 200
+    rateLimitsLike: 200
     unfollowAll: 'False'
     hashtags: 
     users: 
@@ -50,7 +50,7 @@ functions:
     name: tags--${self:custom.name}
     handler: src/tags.tags
     events:
-          - schedule: rate(15 minutes)
+          - schedule: rate(8 hours)
     timeout: 900 
     reservedConcurrency: 1
     memorySize: 128
@@ -59,7 +59,7 @@ functions:
     name: users--${self:custom.name}
     handler: src/users.users
     events:
-          - schedule: rate(15 minutes)
+          - schedule: rate(8 hours)
     timeout: 900 
     reservedConcurrency: 1
     memorySize: 128
@@ -68,18 +68,18 @@ functions:
     name: follow--${self:custom.name}
     handler: src/follow.follow
     events:
-          - schedule: rate(5 minutes)
+          - schedule: rate(3 minutes)
     timeout: 10 
-    reservedConcurrency: 1
+    reservedConcurrency: 0
     memorySize: 128
     
   unfollow:
     name: unfollow--${self:custom.name}
     handler: src/unfollow.unfollow
     events:
-          - schedule: rate(2 minutes)
+          - schedule: rate(3 minutes)
     timeout: 10 
-    reservedConcurrency: 0
+    reservedConcurrency: 1
     memorySize: 128
 
   comment:
@@ -105,7 +105,7 @@ functions:
     handler: src/repost.repost
     events:
           - schedule: rate(8 hours)
-    timeout: 10 
+    timeout: 15 
     reservedConcurrency: 1
     memorySize: 128
 

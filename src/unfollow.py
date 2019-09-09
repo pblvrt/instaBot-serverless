@@ -46,13 +46,6 @@ def unfollow(event, context):
             if(api.LastJson['followed_by']):
                 return  
         api.unfollow(user)
-        print(api.LastJson)
-        print("FOLLOWINGS=================")
-        api.getSelfUsersFollowing()
-        print(len(api.LastJson['users']))
-        print("FOLLOWERS=================")
-        api.getSelfUserFollowers()
-        print(len(api.LastJson['users']))
         response = accountTable.update_item(
             Key={
                 'date': str(datetime.datetime.now().date()), 'username': username

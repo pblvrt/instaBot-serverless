@@ -21,13 +21,13 @@ def follow(event, context):
     response = usersTable.query(
         KeyConditionExpression=Key('username').eq(randomUser)
     )
-    print(response['Items'][0]['pk'])
+    #print(response['Items'][0]['pk'])
     account = accountTable.get_item(
         Key={
         'date': str(datetime.datetime.now().date()), 'username': username
         }
     )
-    print(account)
+    #print(account)
  
     try:
         print(account['Item'])
@@ -47,17 +47,10 @@ def follow(event, context):
     if account['Item']['followed'] >= int(os.environ['rateLimitsFollow']):
         return
     else:
-        print('test')
+        
         api = InstagramAPI(username, password)
         api.login()
         print(api.follow(int(response['Items'][0]['pk'])))
-        print(api.LastJson)
-        print("FOLLOWINGS=================")
-        api.getSelfUsersFollowing()
-        print(len(api.LastJson['users']))
-        print("FOLLOWERS=================")
-        api.getSelfUserFollowers()
-        print(len(api.LastJson['users']))
         reply = accountTable.update_item(
             Key={
                 'date': str(datetime.datetime.now().date()), 'username': username

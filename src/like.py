@@ -15,16 +15,12 @@ def like(event, context):
     RandomItem = usersTable.scan(
         ProjectionExpression = "pk"
     )
-    print(random.choice(RandomItem['Items'])['pk'])
-
-    print(datetime.datetime.now().date())
 
     account = accountTable.get_item(
         Key={
         'date': str(datetime.datetime.now().date()), 'username': username
         }
     )
-    print(account)
  
     try:
         print(account['Item'])
@@ -63,5 +59,5 @@ def like(event, context):
             )
             return
         except Exception as e:
-            print(e)
+            pass
             return

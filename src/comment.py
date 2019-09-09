@@ -15,17 +15,12 @@ def comment(event, context):
     RandomItem = usersTable.scan(
         ProjectionExpression = "pk"
     )
-    print(random.choice(RandomItem['Items'])['pk'])
-
-    print(datetime.datetime.now().date())
 
     account = accountTable.get_item(
         Key={
         'date': str(datetime.datetime.now().date()), 'username': username
         }
-    )
-    print(account)
- 
+    ) 
     try:
         print(account['Item'])
     except KeyError:
@@ -50,7 +45,6 @@ def comment(event, context):
         
         try:
             api.comment(random.choice(api.LastJson['items'])['id'], 'nice pic!')
-            print(api.LastJson)
             response = accountTable.update_item(
                 Key={
                     'date': str(datetime.datetime.now().date()), 'username': username
@@ -63,4 +57,4 @@ def comment(event, context):
                 }
             )
         except:
-            '{message: Not authorized to view user, status: fail}'
+            pass

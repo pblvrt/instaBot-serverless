@@ -22,7 +22,7 @@ def repost(event, context):
     RandomItem = scannedTable.scan(
         ProjectionExpression = "username"
     )
-    print(random.choice(RandomItem['Items'])['username'])
+    #print(random.choice(RandomItem['Items'])['username'])
 
     request_url = "https://www.instagram.com/" + random.choice(RandomItem['Items'])['username'] + "?__a=1"
     headers = {
@@ -30,7 +30,7 @@ def repost(event, context):
     }
 
     response = requests.get(request_url, headers=headers)
-    print(json.dumps(response.json(), indent=4))
+    #print(json.dumps(response.json(), indent=4))
     
     node = random.choice(response.json()['graphql']['user']['edge_owner_to_timeline_media']['edges'])
 

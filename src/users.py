@@ -24,13 +24,14 @@ def users(event, context):
     # search users
     api.searchUsers(randomHash)  
 
-    for user in api.LastJson['hashtags']:
+    for user in api.LastJson['users']:
         response = scannedTable.get_item(
             Key={
                 'username': user['username'], 'pk': user['pk']
             }
         )
         try:
+             print(response['Item'])
         except KeyError:
             scannedTable.put_item(Item=user)
             next_max_id = True
