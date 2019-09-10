@@ -2,6 +2,7 @@ import json
 from Instagram import InstagramAPI
 import time, random, os, sys, datetime
 import boto3
+from boto3.dynamodb.conditions import Attr, Key
 
 dynamoClient = boto3.resource('dynamodb')
 accountTable = dynamoClient.Table(os.environ['accountTable'])
@@ -39,21 +40,29 @@ def unfollow(event, context):
         api.login()
 
         api.getSelfUsersFollowing()
-        user = random.choice(api.LastJson['users'])['pk']
+        username = random.choice(api.LastJson['users'])['username']
         #user = '4808870069'
-        if str(os.environ['unfollowAll']) == 'False':
-            api.userFriendship(user)
-            if(api.LastJson['followed_by']):
-                return  
-        api.unfollow(user)
-        response = accountTable.update_item(
-            Key={
-                'date': str(datetime.datetime.now().date()), 'username': username
-            },
-            AttributeUpdates={
-                'unfollowed': {
-                    'Value': 1,
-                    'Action': 'ADD'
-                }
-            }
+        user = usersTable.query(
+            KeyConditionExpression=Key('username').eq('_anmolvirdi_')
         )
+        try:
+            print(user['Items'][0]['followed'])
+            if str(os.environ['unfollowAll']) == 'False':
+                api.userFriendship(user)
+                if(api.LastJson['followed_by']):
+                    return
+
+
+            api.unfollow(user)
+            response = accountTable.update_item(
+                Key={
+                    'date': str(datetime.datetime.now().date()), 'username': username
+                },
+                AttributeUpdates={
+                    'unfollowed': {
+                        'Value': 1,
+                        'Action': 'ADD'
+                    }
+                }
+            )
+        except:

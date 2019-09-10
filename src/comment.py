@@ -22,7 +22,7 @@ def comment(event, context):
         }
     ) 
     try:
-        print(account['Item'])
+        test = account['Item']
     except KeyError:
         Item = {
             'date': str(datetime.datetime.now().date()),
@@ -41,8 +41,7 @@ def comment(event, context):
     else:
         api = InstagramAPI(username, password)
         api.login()
-        api.getUserFeed(int(random.choice(RandomItem['Items'])['pk']), maxid='', minTimestamp=None)
-        
+        api.getUserFeed(int(random.choice(RandomItem['Items'])['pk']), maxid='', minTimestamp=None)   
         try:
             api.comment(random.choice(api.LastJson['items'])['id'], 'nice pic!')
             response = accountTable.update_item(

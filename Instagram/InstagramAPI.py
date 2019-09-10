@@ -24,8 +24,8 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 try:
     from moviepy.editor import VideoFileClip
 except ImportError:
-    print("Fail to import moviepy. Need only for Video upload.")
-    
+    # print("Fail to import moviepy. Need only for Video upload.")
+    pass
 
 # The urllib library was split into other modules from Python 2 to Python 3
 if sys.version_info.major == 3:
@@ -379,7 +379,8 @@ class InstagramAPI:
             self.LastJson = json.loads(response.text)
             return True
         else:
-            print("Request return " + str(response.status_code) + " error!")
+            #
+            #print("Request return " + str(response.status_code) + " error!")
             # for debugging
             try:
                 self.LastResponse = response
@@ -435,7 +436,7 @@ class InstagramAPI:
             self.LastJson = json.loads(response.text)
             return True
         else:
-            print ("Request return " + str(response.status_code) + " error!")
+            # print ("Request return " + str(response.status_code) + " error!")
             # for debugging
             try:
                 self.LastResponse = response
@@ -492,7 +493,7 @@ class InstagramAPI:
             self.LastJson = json.loads(response.text)
             return True
         else:
-            print("Request return " + str(response.status_code) + " error!")
+            # print("Request return " + str(response.status_code) + " error!")
             # for debugging
             try:
                 self.LastResponse = response
@@ -966,7 +967,7 @@ class InstagramAPI:
                     response = self.s.get(self.API_URL + endpoint, verify=verify)
                 break
             except Exception as e:
-                print('Except on SendRequest (wait 60 sec and resend): ' + str(e))
+                # print('Except on SendRequest (wait 60 sec and resend): ' + str(e))
                 time.sleep(60)
 
         if response.status_code == 200:
@@ -974,12 +975,12 @@ class InstagramAPI:
             self.LastJson = json.loads(response.text)
             return True
         else:
-            print("Request return " + str(response.status_code) + " error!")
+            # print("Request return " + str(response.status_code) + " error!")
             # for debugging
             try:
                 self.LastResponse = response
                 self.LastJson = json.loads(response.text)
-                print(self.LastJson)
+                # print(self.LastJson)
                 if 'error_type' in self.LastJson and self.LastJson['error_type'] == 'sentry_block':
                     raise SentryBlockException(self.LastJson['message'])
             except SentryBlockException:

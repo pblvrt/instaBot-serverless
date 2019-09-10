@@ -23,7 +23,7 @@ def like(event, context):
     )
  
     try:
-        print(account['Item'])
+        test = account['Item']
     except KeyError:
         Item = {
             'date': str(datetime.datetime.now().date()),

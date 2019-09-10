@@ -30,7 +30,7 @@ def follow(event, context):
     #print(account)
  
     try:
-        print(account['Item'])
+        test = account['Item']
     except KeyError:
         Item = {
             'date': str(datetime.datetime.now().date()),
@@ -62,6 +62,7 @@ def follow(event, context):
                 }
             }
         )
+        
         response = usersTable.update_item(
             Key={
                 'username': randomUser, 'pk': response['Items'][0]['pk']
@@ -77,3 +78,4 @@ def follow(event, context):
                 }
             }
         )
+        

@@ -31,7 +31,7 @@ def users(event, context):
             }
         )
         try:
-             print(response['Item'])
+             test = response['Item']
         except KeyError:
             scannedTable.put_item(Item=user)
             next_max_id = True
