@@ -1,4 +1,4 @@
-service: 
+service: fantasticfood
 
 plugins:
   - serverless-iam-roles-per-function
@@ -52,7 +52,7 @@ functions:
     events:
           - schedule: rate(8 hours)
     timeout: 900 
-    reservedConcurrency: 1
+    reservedConcurrency: 0
     memorySize: 128
 
   users:
@@ -70,14 +70,14 @@ functions:
     events:
           - schedule: rate(3 minutes)
     timeout: 10 
-    reservedConcurrency: 0
+    reservedConcurrency: 1
     memorySize: 128
     
   unfollow:
     name: unfollow--${self:custom.name}
     handler: src/unfollow.unfollow
     events:
-          - schedule: rate(3 minutes)
+          - schedule: rate(9 minutes)
     timeout: 10 
     reservedConcurrency: 1
     memorySize: 128

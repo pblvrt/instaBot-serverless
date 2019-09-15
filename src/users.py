@@ -44,15 +44,15 @@ def users(event, context):
                 for follower in api.LastJson['users']:
                     try:
                         Item = {
-                            'pk': liker['pk'],
-                            'username': liker['username'],
-                            'full_name': liker['full_name'],
-                            'is_private': liker['is_private'],
+                            'pk': follower['pk'],
+                            'username': follower['username'],
+                            'full_name': follower['full_name'],
+                            'is_private': follower['is_private'],
                             'followed': False,
                             'followed_date': None
                         }
                         usersTable.put_item(Item=Item)
-                    except:
+                    except Exception as e:
                         pass
                 next_max_id = api.LastJson.get('next_max_id', '')
             return
