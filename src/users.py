@@ -14,15 +14,37 @@ def users(event, context):
 
     username = os.environ['username']
     password = os.environ['password']
-    hashtags = os.environ['users'].split('|')
-    randomHash = random.choice(hashtags)
+    user = os.environ['users'].split('|')
+    randomUser = random.choice(user)
 
     # login
     api = InstagramAPI(username, password)
     api.login()
 
-    # search users
-    api.searchUsers(randomHash)  
+    # first check for user in db
+    response = scannedTable.query(
+        KeyConditionExpression=Key('username').eq(randomUser)
+    )
+
+    #
+    try:
+        user = response['Items'][0]
+        exists = True
+    except IndexError:
+        exists = False
+    
+    if exists:
+        print(user)
+        _ = api.getUserFollowers(user['pk'], maxid='')
+        print(api.LastJson) 
+        print(api.LastJson.get('next_max_id', ''))
+
+    else:
+        # search users
+        api.searchUsers(randomUser)  
+        print(api.LastJson['users'][0])
+
+    return
 
     for user in api.LastJson['users']:
         response = scannedTable.get_item(
@@ -36,7 +58,6 @@ def users(event, context):
             scannedTable.put_item(Item=user)
             next_max_id = True
             while next_max_id:
-                
                 # first iteration hack
                 if next_max_id is True:
                     next_max_id = ''

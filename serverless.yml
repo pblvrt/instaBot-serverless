@@ -1,4 +1,4 @@
-service: dailygirlsdose
+service: tattoo
 
 plugins:
   - serverless-iam-roles-per-function
@@ -6,7 +6,7 @@ plugins:
   - serverless-python-requirements
 custom:
   stage: v1
-  name:  dailygirlsdose
+  name:  tattoo
   tableThroughput: 2
   scannedTable: scannedTable--${self:custom.name}
   accountTable: accountTable--${self:custom.name}
@@ -18,14 +18,14 @@ provider:
   region: eu-west-1
   #Configure the bot by editing the env variables below
   environment:
-    username: cocoa_bw
-    password: cocoa_bw8611
+    username: o_tattoo_0
+    password: o_tattoo_08611
     rateLimitsFollow: 1000
     rateLimitsComment: 200
     rateLimitsLike: 200
     unfollowAll: 'False'
-    hashtags: blackandwhite|blackandwhitephotography|blackandwhitephoto|bw_shots
-    users: bnwmood|ts_design_bw|bw_addiction|moods_in_bnw|black_and_white__life
+    hashtags: inkedman|inked4life|tattooaddict|tattoed|tattoosleeve|tattoedmen|inkedguy|inkedwomen|inkedlifestyle|tattoedman|inkedguys|tattooist|tattooart|tattooedgirls
+    users: tattootattat|tattoodo|glorious_tattoo|best_tattoos_ig__|tattoo_collector
    
     scannedTable: scannedTable--${self:custom.name}
     accountTable: accountTable--${self:custom.name}
