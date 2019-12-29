@@ -24,13 +24,15 @@ provider:
     rateLimitsComment: 200
     rateLimitsLike: 200
     unfollowAll: 'False'
-    hashtags: inkedman|inked4life|tattooaddict|tattoed|tattoosleeve|tattoedmen|inkedguy|inkedwomen|inkedlifestyle|tattoedman|inkedguys|tattooist|tattooart|tattooedgirls
+    tags: inkedman|inked4life|tattooaddict|tattoed|tattoosleeve|tattoedmen|inkedguy|inkedwomen|inkedlifestyle|tattoedman|inkedguys|tattooist|tattooart|tattooedgirls
     users: tattootattat|tattoodo|glorious_tattoo|best_tattoos_ig__|tattoo_collector
    
     scannedTable: scannedTable--${self:custom.name}
     accountTable: accountTable--${self:custom.name}
     usersTable: usersTable--${self:custom.name}
 
+    next_max_id_queue: "https://sqs.eu-west-1.amazonaws.com/403838165554/nextMaxIdQueue"
+    
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -44,25 +46,25 @@ provider:
         - arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/${self:custom.scannedTable}
         - arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/${self:custom.accountTable}
         - arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/${self:custom.usersTable}
+    - Effect: Allow
+      Action:
+        - sqs:SendMessage
+        - sqs:DeleteMessage
+      Resource:
+        - "arn:aws:sqs:${self:provider.region}:#{AWS::AccountId}:nextMaxIdQueue"
 
 functions:
-  tags:
-    name: tags--${self:custom.name}
-    handler: src/tags.tags
+
+  analyze_followers:
+    name: analyze_followers--${self:custom.name}
+    handler: src/analyze_followers.analyze_followers
     events:
-          - schedule: rate(8 hours)
+      - schedule: rate(8 hours)
+      - sqs: "arn:aws:sqs:${self:provider.region}:#{AWS::AccountId}:nextMaxIdQueue"              
     timeout: 900 
     reservedConcurrency: 1
     memorySize: 128
 
-  users:
-    name: users--${self:custom.name}
-    handler: src/users.users
-    events:
-          - schedule: rate(8 hours)
-    timeout: 900 
-    reservedConcurrency: 1
-    memorySize: 128
 
   follow:
     name: follow--${self:custom.name}
@@ -164,3 +166,8 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: ${self:custom.tableThroughput}
           WriteCapacityUnits: ${self:custom.tableThroughput}
+
+    nextMaxIdQueue:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        QueueName: "nextMaxIdQueue"

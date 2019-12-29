@@ -986,7 +986,8 @@ class InstagramAPI:
             except SentryBlockException:
                 raise
             except:
-                pass
+                print(response.text)
+                
             return False
 
     def getTotalFollowers(self, usernameId):
